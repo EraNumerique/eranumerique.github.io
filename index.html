@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallerie personnalisé d'épicerie / Personalized Grocery Gallery</title>
+    <script src="js/html2canvas.min.js"></script>
+    <style>
+        /* CSS is unchanged */
+        :root { --bg-color: #f4f4f4; --text-color: #333; --card-bg-color: var(--bg-color); --card-shadow: rgba(0,0,0,0.1); --selection-color: #4CAF50; --column-count: 1; }
+        body { font-family: sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 20px; transition: background-color 0.3s, color 0.3s; }
+        .controls { background-color: var(--card-bg-color); padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 5px var(--card-shadow); }
+        .controls h2 { margin-top: 0; }
+        .control-group { margin-bottom: 15px; display: flex; flex-wrap: wrap; gap: 15px; align-items: center; }
+        .control-group label { font-weight: bold; }
+        button { padding: 8px 12px; border: none; background-color: #007bff; color: white; border-radius: 4px; cursor: pointer; }
+        button:disabled { background-color: #aaa; }
+        h1 { text-align: center; font-size: 50px; }
+        h1.subtitle { font-size: 20px; margin-top: -30px; }
+        #capture-area { background-color: var(--bg-color); }
+        .gallery { column-count: var(--column-count); column-gap: 15px; }
+        .column { break-inside: avoid; margin-bottom: 15px; display: flex; flex-direction: column; background-color: var(--card-bg-color); padding: 10px; box-shadow: 0 2px 5px var(--card-shadow); border-radius: 5px; }
+        .column.hidden { display: none; }
+        .column h2 { text-align: center; margin-bottom: 10px; }
+        img.grocery-item + img.grocery-item { margin-top: 15px; }
+        img { width: 100%; height: auto; display: block; border: 9px solid transparent; border-radius: 3px; cursor: pointer; transition: border-color 0.2s; }
+        img.selected { border-color: var(--selection-color); }
+        body.hiding-borders img.selected { border-color: transparent !important; }
+        .hide-for-export { display: none !important; }
+        .info-notes { background-color: #f0f4f8; border-left: 4px solid #007bff; padding: 10px 15px; margin-top: 15px; border-radius: 4px; width: 100%; }
+        .info-notes ul { padding-left: 20px; margin: 5px 0; }
+        .info-notes li { margin-bottom: 5px; }
+        @media print { .controls, button { display: none !important; } body { margin: 0; } img:not(.selected) { display: none; } .column { page-break-inside: avoid; } body.hiding-borders img.selected { border-color: transparent !important; } }
+    </style>
+</head>
+<body>
+
+<div class="controls">
+    <h2>Panneau de configuration</h2>
+    <div class="control-group">
+        <label for="bgColor">Couleur de fond:</label>
+        <input type="color" id="bgColor" value="#f4f4f4">
+        <label for="textColor">Couleur du texte:</label>
+        <input type="color" id="textColor" value="#333333">
+    </div>
+    <div class="control-group">
+        <label for="borderColor">Couleur de sélection:</label>
+        <input type="color" id="borderColor" value="#4CAF50">
+        <label><input type="checkbox" id="hideBorderCheckbox"> Cacher la bordure</label>
+        <label><input type="checkbox" id="showLogosCheckbox" checked> Afficher les logos</label>
+    </div>
+    <div class="control-group">
+        <label for="columnSlider">Nombre de colonnes: <span id="columnCountLabel">1</span></label>
+        <input type="range" id="columnSlider" min="1" max="6" value="1" style="width: 200px;">
+    </div>
+    <div class="control-group">
+        <label>Afficher les magasins:</label>
+        <div id="storeToggles"></div>
+        <button id="savePrefsButton" style="background-color: #28a745;">Sauvegarder les préférences</button>
+        <button id="resetPrefsButton" style="background-color: #dc3545;">Réinitialiser</button>
+    </div>
+    <div class="info-notes">
+        <p><strong>Conseils :</strong></p>
+        <ul>
+            <li>La meilleure qualité sur mobile est obtenue avec 1 ou 2 colonnes.</li>
+            <li>Vous pouvez cliquer sur les items que vous ne voulez pas. S'ils n'ont pas la bordure, ils ne seront pas dans l'image exportée.</li>
+        </ul>
+    </div>
+    <div class="control-group">
+        <button id="exportPngButton">Enregistrer en PNG (Haute Qualité)</button>
+        <button id="exportJpgButton">Enregistrer en JPG (Fichier Plus Petit)</button>
+        <button id="printButton">Imprimer / PDF</button>
+    </div>
+    <div id="loadingIndicator" style="display: none; font-weight: bold; margin-top: 10px;">Génération de l'image...</div>
+</div>
+<div id="capture-area">
+    <h1>Ma liste d'épicerie personnalisée à partir du 21 août</h1>
+    <h1 class="subtitle">par /u/eranumerique, https://eranumerique.github.io/</h1>
+    <div class="gallery" id="gallery"></div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    // Data and initial constants
+    const logoImageFolder = 'images/logo/';
+    const weeklyGroceriesFolder = 'images/weekly-groceries/';
+    const stores = {'IGA':'iga.png', 'Maxi':'Maxi.png', 'Metro':'metro.png', 'Super C':'superc.png', 'Marché Adonis':'adonis.png', 'Marché Richelieu':'marcherichelieu.png', 'Provigo':'Provigo.png', 'Supermarché PA':'supermarchepa.png'};
+    
+    // Element references
+    const gallery = document.getElementById('gallery');
+    const storeTogglesContainer = document.getElementById('storeToggles');
+    const root = document.documentElement;
+    const columnSlider = document.getElementById('columnSlider');
+    const columnCountLabel = document.getElementById('columnCountLabel');
+    const bgColorInput = document.getElementById('bgColor');
+    const textColorInput = document.getElementById('textColor');
+    const borderColorInput = document.getElementById('borderColor');
+    const hideBorderCheckbox = document.getElementById('hideBorderCheckbox');
+    const showLogosCheckbox = document.getElementById('showLogosCheckbox');
+
+    // === ALL HELPER FUNCTIONS ARE NOW DEFINED HERE, BEFORE THEY ARE USED ===
+
+    function placeImageInColumn(fileName, folderPath) {
+        let detectedStore = fileName.toLowerCase().includes('supermarche pa') ? 'Supermarché PA' : Object.keys(stores).find(store => fileName.includes(store));
+        if (detectedStore) {
+            const targetColumn = document.querySelector(`.column[data-store="${detectedStore}"]`);
+            if (targetColumn) {
+                const img = document.createElement('img');
+                img.src = folderPath + fileName;
+                img.alt = fileName;
+                img.addEventListener('click', (e) => e.target.classList.toggle('selected'));
+                img.classList.add('selected');
+                img.classList.add('grocery-item');
+                targetColumn.appendChild(img);
+            }
+        }
+    }
+
+    function initialize(weeklyImageFiles) {
+        for (const storeName in stores) {
+            const column = document.createElement('div'); column.className = 'column'; column.dataset.store = storeName;
+            const title = document.createElement('h2'); title.textContent = storeName;
+            const logo = document.createElement('img'); logo.src = logoImageFolder + stores[storeName]; logo.alt = `${storeName} Logo`;
+            column.appendChild(title); column.appendChild(logo); gallery.appendChild(column);
+            const toggleLabel = document.createElement('label'); const toggleCheckbox = document.createElement('input');
+            toggleCheckbox.type = 'checkbox'; toggleCheckbox.checked = true; toggleCheckbox.dataset.store = storeName;
+            toggleCheckbox.addEventListener('change', (e) => { 
+                document.querySelector(`.column[data-store="${e.target.dataset.store}"]`).classList.toggle('hidden', !e.target.checked); 
+            });
+            toggleLabel.appendChild(toggleCheckbox); toggleLabel.append(` ${storeName}`); storeTogglesContainer.appendChild(toggleLabel);
+        }
+        weeklyImageFiles.forEach(fileName => { placeImageInColumn(fileName, weeklyGroceriesFolder); });
+    }
+    
+    function savePreferences() {
+        const preferredStores = Array.from(document.querySelectorAll('#storeToggles input:checked')).map(cb => cb.dataset.store);
+        const allPreferences = {
+            columns: columnSlider.value,
+            bgColor: bgColorInput.value,
+            textColor: textColorInput.value,
+            borderColor: borderColorInput.value,
+            hideBorder: hideBorderCheckbox.checked,
+            showLogos: showLogosCheckbox.checked,
+            stores: preferredStores
+        };
+        localStorage.setItem('groceryGallery_allPreferences', JSON.stringify(allPreferences));
+        alert('Préférences sauvegardées !');
+    }
+
+    function loadPreferences() {
+        const savedPrefsJSON = localStorage.getItem('groceryGallery_allPreferences');
+        if (!savedPrefsJSON) return;
+        try {
+            const prefs = JSON.parse(savedPrefsJSON);
+            if (prefs.columns) {
+                root.style.setProperty('--column-count', prefs.columns);
+                columnSlider.value = prefs.columns;
+                columnCountLabel.textContent = prefs.columns;
+            }
+            if (prefs.bgColor) {
+                root.style.setProperty('--bg-color', prefs.bgColor);
+                bgColorInput.value = prefs.bgColor;
+            }
+            if (prefs.textColor) {
+                root.style.setProperty('--text-color', prefs.textColor);
+                textColorInput.value = prefs.textColor;
+            }
+            if (prefs.borderColor) {
+                root.style.setProperty('--selection-color', prefs.borderColor);
+                borderColorInput.value = prefs.borderColor;
+            }
+            if (typeof prefs.hideBorder !== 'undefined') {
+                hideBorderCheckbox.checked = prefs.hideBorder;
+            }
+            if (typeof prefs.showLogos !== 'undefined') {
+                showLogosCheckbox.checked = prefs.showLogos;
+            }
+            if (prefs.stores && Array.isArray(prefs.stores)) {
+                document.querySelectorAll('#storeToggles input[type="checkbox"]').forEach(checkbox => {
+                    const storeName = checkbox.dataset.store;
+                    const shouldBeVisible = prefs.stores.includes(storeName);
+                    checkbox.checked = shouldBeVisible;
+                    document.querySelector(`.column[data-store="${storeName}"]`).classList.toggle('hidden', !shouldBeVisible);
+                });
+            }
+        } catch (e) {
+            console.error("Failed to parse saved preferences:", e);
+            localStorage.removeItem('groceryGallery_allPreferences');
+        }
+    }
+
+    function resetPreferences() {
+        localStorage.removeItem('groceryGallery_allPreferences');
+        alert('Préférences réinitialisées. La page va se recharger.');
+        location.reload();
+    }
+
+    async function exportGallery(format) {
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const exportPngButton = document.getElementById('exportPngButton');
+        const exportJpgButton = document.getElementById('exportJpgButton');
+        const printButton = document.getElementById('printButton');
+        loadingIndicator.style.display = 'block';
+        exportPngButton.disabled = true; exportJpgButton.disabled = true; printButton.disabled = true;
+        const hiddenElements = [];
+        document.querySelectorAll('#gallery img.grocery-item:not(.selected), #gallery .column:not(:has(img.selected.grocery-item))').forEach(el => {
+            el.classList.add('hide-for-export');
+            hiddenElements.push(el);
+        });
+        if (!showLogosCheckbox.checked) {
+            document.querySelectorAll('.column img:not(.grocery-item)').forEach(logo => {
+                logo.classList.add('hide-for-export');
+                hiddenElements.push(logo);
+            });
+        }
+        if (hideBorderCheckbox.checked) {
+            document.body.classList.add('hiding-borders');
+        }
+        const captureElement = document.getElementById('capture-area');
+        try {
+            const canvas = await html2canvas(captureElement, {
+                scale: Math.min(window.devicePixelRatio, 2),
+                useCORS: true,
+                backgroundColor: getComputedStyle(root).getPropertyValue('--bg-color').trim()
+            });
+            const image = canvas.toDataURL(`image/${format}`, format === 'jpeg' ? 0.9 : 1.0);
+            const link = document.createElement('a');
+            link.href = image;
+            link.download = `ma-liste-epicerie.${format}`;
+            link.click();
+        } catch (error) {
+            console.error("Erreur lors de la génération de l'image:", error);
+            const currentColumns = columnSlider.value;
+            if (parseInt(currentColumns, 10) === 1) {
+                alert("L'exportation a échoué. Cela se produit souvent car l'image est trop haute avec 1 seule colonne. Essayez avec 2 colonnes ou plus, ou désélectionnez quelques items.");
+            } else {
+                alert("Une erreur est survenue lors de la génération de l'image. Essayez d'augmenter le nombre de colonnes ou de désélectionner certains articles.");
+            }
+        }
+        hiddenElements.forEach(el => el.classList.remove('hide-for-export'));
+        document.body.classList.remove('hiding-borders');
+        loadingIndicator.style.display = 'none';
+        exportPngButton.disabled = false; exportJpgButton.disabled = false; printButton.disabled = false;
+    }
+
+    // --- MAIN SCRIPT EXECUTION ---
+    try {
+        // Step 1: Fetch the grocery list from the JSON file
+        const response = await fetch('groceries.json');
+        if (!response.ok) {
+            throw new Error(`Failed to load groceries.json: ${response.statusText}`);
+        }
+        const weeklyImageFiles = await response.json();
+
+        // Step 2: Build the page content with the fetched data
+        initialize(weeklyImageFiles);
+        
+        // Step 3: Load any saved user preferences
+        loadPreferences();
+
+        // Step 4: Attach all event listeners to the controls
+        bgColorInput.addEventListener('input', (e) => root.style.setProperty('--bg-color', e.target.value));
+        textColorInput.addEventListener('input', (e) => root.style.setProperty('--text-color', e.target.value));
+        borderColorInput.addEventListener('input', (e) => root.style.setProperty('--selection-color', e.target.value));
+        columnSlider.addEventListener('input', (e) => {
+            const count = e.target.value;
+            root.style.setProperty('--column-count', count);
+            columnCountLabel.textContent = count;
+        });
+        document.getElementById('savePrefsButton').addEventListener('click', savePreferences);
+        document.getElementById('resetPrefsButton').addEventListener('click', resetPreferences);
+        document.getElementById('exportPngButton').addEventListener('click', () => exportGallery('png'));
+        document.getElementById('exportJpgButton').addEventListener('click', () => exportGallery('jpeg'));
+        document.getElementById('printButton').addEventListener('click', () => {
+            const hiddenForPrint = [];
+            document.querySelectorAll('.column').forEach(col => {
+                if (col.querySelectorAll('img.selected').length === 0) {
+                    col.classList.add('hide-for-export');
+                    hiddenForPrint.push(col);
+                }
+            });
+            if (hideBorderCheckbox.checked) { document.body.classList.add('hiding-borders'); }
+            window.print();
+            hiddenForPrint.forEach(el => el.classList.remove('hide-for-export'));
+            document.body.classList.remove('hiding-borders');
+        });
+
+    } catch (error) {
+        console.error("CRITICAL ERROR:", error);
+        alert("ERREUR CRITIQUE : Impossible de charger la liste d'épicerie (groceries.json). La page ne peut pas fonctionner. Assurez-vous que le fichier existe et qu'il est accessible.");
+    }
+});
+</script>
+
+</body>
+</html>
