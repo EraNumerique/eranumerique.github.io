@@ -5,31 +5,141 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gallerie personnalisé d'épicerie / Personalized Grocery Gallery</title>
     <script src="js/html2canvas.min.js"></script>
+
+    <!-- 1. MODERN TYPOGRAPHY -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    
     <style>
-        /* CSS is unchanged */
-        :root { --bg-color: #f4f4f4; --text-color: #333; --card-bg-color: var(--bg-color); --card-shadow: rgba(0,0,0,0.1); --selection-color: #4CAF50; --column-count: 1; }
-        body { font-family: sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 20px; transition: background-color 0.3s, color 0.3s; }
-        .controls { background-color: var(--card-bg-color); padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 5px var(--card-shadow); }
-        .controls h2 { margin-top: 0; }
-        .control-group { margin-bottom: 15px; display: flex; flex-wrap: wrap; gap: 15px; align-items: center; }
-        .control-group label { font-weight: bold; }
-        button { padding: 8px 12px; border: none; background-color: #007bff; color: white; border-radius: 4px; cursor: pointer; }
-        button:disabled { background-color: #aaa; }
+        /* 2. REFINED COLOR PALETTE & SOFTER SHADOWS */
+        :root {
+            --bg-color: #f8f9fa; /* Softer background */
+            --text-color: #212529; /* Darker, but not black */
+            --card-bg-color: #ffffff; /* Pure white cards stand out nicely */
+            --card-shadow: rgba(0, 0, 0, 0.08); /* Softer shadow */
+            --selection-color: #007bff; /* Changed the default green to a nice blue */
+            --column-count: 1;
+        }
+
+        /* 1. MODERN TYPOGRAPHY (Applied) */
+        body {
+            font-family: 'Lato', sans-serif; /* New body font */
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        h1, h2 {
+            font-family: 'Poppins', sans-serif; /* New heading font */
+        }
+        
+        /* 3. IMPROVED LAYOUT FOR CONTROLS */
+        .controls {
+            display: grid; /* Use Grid */
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive columns */
+            gap: 25px; /* Space between grid items */
+            margin-bottom: 30px;
+            background-color: var(--card-bg-color);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px var(--card-shadow);
+            border: 1px solid #e9ecef;
+        }
+        
+        .controls h2 {
+            grid-column: 1 / -1; /* Make title span all columns */
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+        
+        .control-group {
+            margin-bottom: 0; /* Remove old margin */
+            display: flex;
+            flex-direction: column; /* Stack labels on top of inputs */
+            align-items: flex-start;
+            gap: 10px; /* Space between label and input */
+        }
+        
+        .control-group label {
+            font-weight: bold;
+        }
+        
+        #storeToggles {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* Two columns for stores */
+            gap: 10px;
+            width: 100%;
+        }
+
+        /* 4. INTERACTIVE FEEDBACK & VISUAL POLISH (Buttons) */
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px; /* Rounded corners */
+            font-weight: bold;
+            font-family: 'Lato', sans-serif;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.2s ease-in-out;
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-2px); /* Lifts the button slightly */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            filter: brightness(1.1); /* Makes it a bit brighter */
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+        
+        /* --- General and Gallery Styles (Updated) --- */
         h1 { text-align: center; font-size: 50px; }
         h1.subtitle { font-size: 20px; margin-top: -30px; }
+        
         #capture-area { background-color: var(--bg-color); }
         .gallery { column-count: var(--column-count); column-gap: 15px; }
-        .column { break-inside: avoid; margin-bottom: 15px; display: flex; flex-direction: column; background-color: var(--card-bg-color); padding: 10px; box-shadow: 0 2px 5px var(--card-shadow); border-radius: 5px; }
+        
+        .column {
+            break-inside: avoid;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--card-bg-color);
+            padding: 15px;
+            box-shadow: 0 4px 12px var(--card-shadow);
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+        }
+
         .column.hidden { display: none; }
         .column h2 { text-align: center; margin-bottom: 10px; }
+        
         img.grocery-item + img.grocery-item { margin-top: 15px; }
-        img { width: 100%; height: auto; display: block; border: 9px solid transparent; border-radius: 3px; cursor: pointer; transition: border-color 0.2s; }
+        img { width: 100%; height: auto; display: block; border: 9px solid transparent; border-radius: 8px; cursor: pointer; transition: all 0.2s ease-in-out; }
+        
         img.selected { border-color: var(--selection-color); }
+        
+        /* 4. INTERACTIVE FEEDBACK & VISUAL POLISH (Images) */
+        img.grocery-item:hover {
+            transform: scale(1.03); /* Slightly enlarge image on hover */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* Add a shadow on hover */
+        }
+
         body.hiding-borders img.selected { border-color: transparent !important; }
+        
         .hide-for-export { display: none !important; }
-        .info-notes { background-color: #f0f4f8; border-left: 4px solid #007bff; padding: 10px 15px; margin-top: 15px; border-radius: 4px; width: 100%; }
+        
+        .info-notes { background-color: #e7f5ff; border-left: 4px solid #007bff; padding: 10px 15px; margin-top: 15px; border-radius: 4px; width: 100%; }
         .info-notes ul { padding-left: 20px; margin: 5px 0; }
         .info-notes li { margin-bottom: 5px; }
+        
         @media print { .controls, button { display: none !important; } body { margin: 0; } img:not(.selected) { display: none; } .column { page-break-inside: avoid; } body.hiding-borders img.selected { border-color: transparent !important; } }
     </style>
 </head>
@@ -39,42 +149,44 @@
     <h2>Panneau de configuration</h2>
     <div class="control-group">
         <label for="bgColor">Couleur de fond:</label>
-        <input type="color" id="bgColor" value="#f4f4f4">
+        <input type="color" id="bgColor" value="#f8f9fa">
         <label for="textColor">Couleur du texte:</label>
-        <input type="color" id="textColor" value="#333333">
+        <input type="color" id="textColor" value="#212529">
     </div>
     <div class="control-group">
         <label for="borderColor">Couleur de sélection:</label>
-        <input type="color" id="borderColor" value="#4CAF50">
+        <input type="color" id="borderColor" value="#007bff">
         <label><input type="checkbox" id="hideBorderCheckbox"> Cacher la bordure</label>
         <label><input type="checkbox" id="showLogosCheckbox" checked> Afficher les logos</label>
     </div>
     <div class="control-group">
         <label for="columnSlider">Nombre de colonnes: <span id="columnCountLabel">1</span></label>
-        <input type="range" id="columnSlider" min="1" max="6" value="1" style="width: 200px;">
+        <input type="range" id="columnSlider" min="1" max="6" value="1" style="width: 100%;">
     </div>
     <div class="control-group">
         <label>Afficher les magasins:</label>
         <div id="storeToggles"></div>
+    </div>
+     <div class="control-group">
         <button id="savePrefsButton" style="background-color: #28a745;">Sauvegarder les préférences</button>
         <button id="resetPrefsButton" style="background-color: #dc3545;">Réinitialiser</button>
     </div>
-    <div class="info-notes">
+    <div class="info-notes" style="grid-column: 1 / -1;">
         <p><strong>Conseils :</strong></p>
         <ul>
             <li>La meilleure qualité sur mobile est obtenue avec 1 ou 2 colonnes.</li>
             <li>Vous pouvez cliquer sur les items que vous ne voulez pas. S'ils n'ont pas la bordure, ils ne seront pas dans l'image exportée.</li>
         </ul>
     </div>
-    <div class="control-group">
-        <button id="exportPngButton">Enregistrer en PNG (Haute Qualité)</button>
-        <button id="exportJpgButton">Enregistrer en JPG (Fichier Plus Petit)</button>
+    <div class="control-group" style="grid-column: 1 / -1; flex-direction: row; gap: 15px; align-items: center; justify-content: center;">
+        <button id="exportPngButton">Enregistrer en PNG</button>
+        <button id="exportJpgButton">Enregistrer en JPG</button>
         <button id="printButton">Imprimer / PDF</button>
     </div>
-    <div id="loadingIndicator" style="display: none; font-weight: bold; margin-top: 10px;">Génération de l'image...</div>
+    <div id="loadingIndicator" style="display: none; font-weight: bold; margin-top: 10px; grid-column: 1 / -1; text-align: center;">Génération de l'image...</div>
 </div>
 <div id="capture-area">
-    <h1>Ma liste d'épicerie personnalisée à partir du 17 septembre</h1>
+    <h1>Ma liste d'épicerie personnalisée à partir du 25 septembre</h1>
     <h1 class="subtitle">par /u/eranumerique, https://eranumerique.github.io/</h1>
     <div class="gallery" id="gallery"></div>
 </div>
@@ -84,7 +196,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Data and initial constants
     const logoImageFolder = 'images/logo/';
     const weeklyGroceriesFolder = 'images/weekly-groceries/';
-    const stores = {'IGA':'iga.png', 'Maxi':'Maxi.png', 'Metro':'metro.png', 'Super C':'superc.png', 'Marché Adonis':'adonis.png', 'Marché Richelieu':'marcherichelieu.png', 'Provigo':'Provigo.png', 'Supermarché PA':'supermarchepa.png'};
+    const stores = {'IGA':'iga.png', 'Maxi':'Maxi.png', 'Metro':'metro.png', 'Super C':'superc.png', 'Adonis':'adonis.png', 'Marché Richelieu':'marcherichelieu.png', 'Provigo':'Provigo.png', 'Supermarché PA':'supermarchepa.png'};
     
     // Element references
     const gallery = document.getElementById('gallery');
@@ -292,5 +404,43 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 </script>
 
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
 </body>
 </html>
