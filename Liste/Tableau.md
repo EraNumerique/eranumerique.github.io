@@ -1,44 +1,50 @@
 |Emoji|Type|Aliment|Magasin|Prix/lb ou unité|
 |:--|:--|:--|:--|:--|
-|🍌|Fruits|Clémentines|Adonis|1,99 $ /lb|
-|🥕|Légumes|Laitue Iceberg, Chou Plat, Patate Douce Ou Courges Dures|Adonis|0,94 $ /lb|
-|🥩|Viande|Bifteck Ou Rôti De Contre-Filet|IGA|9,88 $ /lb|
-|🐔|Viande|Jeune Dindon Surgelé Flamingo|IGA|1,99 $ /lb|
-|🥚|Viande|Oeufs Blancs|IGA|2,99 $ chacun|
-|🐄|Laitier|Fromage Selection (400g, Mieux‑être 375g)|Marché Richelieu|4,44 $ chacun|
-|🥕|Légumes|Chou-Fleur|Marché Richelieu|1,99 $ chacun|
-|🐔|Viande|Cuisses De Poulet Frais Avec Dos|Marché Richelieu|1,99 $ /lb|
-|🐟|Viande|Filet De Truite Steelhead|Maxi|10,00 $ /lb|
-|🥕|Légumes|Courges|Metro|0,88 $ /lb|
-|🐟|Viande|Filets De Truite|Metro|8,88 $ /lb|
-|🥩|Viande|Rôti De Longe De Porc Frais Désossé|Metro|2,88 $ /lb|
-|🍌|Fruits|Bleuets|Provigo|3,00 $ chacun|
-|🍌|Fruits|Fraises (454 g)|Provigo|3,00 $ chacun|
-|🐖|Viande|Jambonneau Cook's Jarret ou Fesse|Provigo|1,99 $ /lb|
-|🐟|Viande|Filets de Saumon Coho Frais|Provigo|9,00 $ /lb|
-|🥚|Viande|Gros Oeufs Blancs Sans Nom, Pqt De 12|Provigo|3,00 $ chacun|
-|🍌|Fruits|Grosses Oranges Navel Sans Pépins (gr 48-56)|Super C|0,95 $ /lb|
-|🐄|Laitier|Beurre Selection|Super C|4,88 $ chacun|
-|🥕|Légumes|Aubergines Ou Courgettes Vertes|Super C|1,49 $ /lb|
-|🥕|Légumes|Carottes Ou Oignons Jaunes (3 lb)|Super C|0,95 $ chacun|
-|🥕|Légumes|Chou-Fleur|Super C|1,67 $ chacun|
-|🥕|Légumes|Huile D'Olive Bertolli|Super C|8,99 $ chacun|
-|🥕|Légumes|Légumes Irrésistible surgelés (500 g)|Super C|2,24 $ chacun|
-|🥕|Légumes|Tofu Unisoya|Super C|4,99 $ chacun|
-|🥩|Viande|Biftecks De Contre-Filet|Super C|8,99 $ /lb|
-|🐖|Viande|Filets De Porc Frais|Super C|3,44 $ /lb|
-|🥩|Viande|Poulet Haché Extra-Maigre Rachel'S (454 g)|Super C|3,49 $ chacun|
-|🐟🥫|Viande|Thon Pâle Entier Unico|Super C|0,99 $ chacun|
-|🥩|Viande|Veau De Grain Haché Maigre|Super C|4,88 $ /lb|
-|🍌|Fruits|Ananas Golden Ripe|Supermarche PA|2,99 $ chacun|
-|🍌|Fruits|Cantaloup|Supermarche PA|2,99 $ chacun|
-|🥕|Légumes|Légumineuses Primo (540ml)|Supermarche PA|0,99 $ chacun|
-|🥕|Légumes|Mini Poivrons Doux (1 lb)|Supermarche PA|0,99 $ chacun|
-|🥕|Légumes|Chou-Fleur (2)|Supermarche PA|4.00$ pour 2|
-|🌾|Riz|Riz Basmati Phoenicia 777 (10 lb)|Adonis|10.99$ chacun|
-|🍌|Fruits|Oranges (3 lb)|Adonis|3.99$ chacun|
-|🥩|Viande|Jambon fumé sélection (2)|Adonis|15$ pour 2|
-|🥕|Légumes|Carottes ou oignons jaunes. Betteraves ou rutabagas (3 sacs de 5 lb)|IGA|4,98$ pour 3 sac|
-|🍌|Fruits|Pommes McIntosh (8lb)|IGA|4.99$ scène+ 8 lb, 6.99$ non-membre|
-|🥕|Légumes|Couronne de Broccoli, Avocat|Maxi|0.55$ chacun|
-|🥕|Légumes|Pommes de Terre Russet (10lb)|Maxi|1.50$ chacun​|
+|🐔|Viande|Dindon Surgelé Cat "A" (7 kg)|Adonis|1,77 $ /lb|
+|🐟|Viande|Filet De Saumon De L'Atlantique Frais|Adonis|8,77 $ /lb|
+|🥩|Viande|Filet Mignon Beef Butt Tenderloin Vaccum|Adonis|14,99 $ /lb|
+|🥩|Viande|Rôti Ou Bifteck De Contre Filet|Adonis|9,99 $ /lb|
+|🐄|Laitier|Beurre Lactantia (454 g)|IGA|4,99 $ chacun|
+|🥕|Légumes|Légumineuses Compliments (900 g) (100 points boni avec 2 sac)|IGA|2,99 $ chacun|
+|🐟|Viande|Filets De Saumon Atlantique Canadien Frais|IGA|8,99 $ /lb|
+|🐖|Viande|Jambon Fumé Avec Os Schneiders|IGA|2,99 $ /lb|
+|🍌|Fruits|Fraises Gros Ananas Tropical Gold (gr 6)|Marché Richelieu|2,99 $ chacun|
+|🍌|Fruits|Oranges Navel Sans Pépins (4 lb)|Marché Richelieu|4,99 $ chacun|
+|🐟|Viande|Filets De Saumon Atlantique Frais Sans Arêtes|Marché Richelieu|8,99 $ /lb|
+|🥚|Viande|Oeufs Blancs Selection|Marché Richelieu|2,99 $ chacun|
+|🍌|Fruits|Ananas|Maxi|3,00 $ chacun|
+|🥕|Légumes|Chou-Fleur|Maxi|1,67 $ chacun|
+|🥕|Légumes|Pommes De Terre Blanches, Russet Ou Jaunes Délices Du Marché 10 Lb|Maxi|2,99 $ chacun|
+|🐖|Viande|Demi-Longe De Porc|Maxi|1,99 $ /lb|
+|🐔|Viande|Poitrines De Poulet Format Club, Désossées, Sans Peau|Maxi|4,99 $ /lb|
+|🍌|Fruits|Gros Ananas Tropical Gold Importé Du Costa Rica Ou Asperges (gr 6)|Metro|2,99 $ chacun|
+|🍌|Fruits|Oranges Navel Sans Pépins, Carottes Ou Oignons Jaunes (gr 48-56)|Metro|0,77 $ chacun|
+|🥕|Légumes|Céleri (gr 24)|Metro|0,99 $ chacun|
+|🥕|Légumes|Tofu Unisoya|Metro|1,99 $ chacun|
+|🐟|Viande|Filets De Saumon Atlantique Frais|Metro|8,77 $ /lb|
+|🐖|Viande|Jambon Fumé Levesque|Metro|3,49 $ /lb|
+|🐔|Viande|Jeune Dindon Butterball|Metro|1,99 $ /lb|
+|🐖|Viande|Porc Haché Extra-Maigre|Metro|2,88 $ /lb|
+|🥩|Viande|Rôti De Contre-Filet Désossé|Metro|8,99 $ /lb|
+|🍌|Fruits|Large Crownless Pineapple|Provigo|3,00 $ chacun|
+|🥕|Légumes|Cauliflower|Provigo|1,50 $ chacun|
+|🐟|Viande|Fresh Atlantic Salmon Fillets|Provigo|9,00 $ /lb|
+|🐟|Viande|Fresh Atlantic Salmon Skin-On Fillets|Provigo|9,00 $ /lb|
+|🐖|Viande|Pork Tenderloin|Provigo|4,00 $ /lb|
+|🍌|Fruits|Ananas Tropical Gold (gr 8)|Super C|2,99 $ chacun|
+|🥕|Légumes|Courges|Super C|0,99 $ /lb|
+|🥕|Légumes|Poivrons De Couleur|Super C|0,99 $ /lb|
+|🥩|Viande|Bifteck Ou Rôti De Filet Mignon (Vendredi et SamedI)|Super C|14,99 $ /lb|
+|🐔|Viande|Cuisses De Poulet Frais|Super C|1,95 $ /lb|
+|🐟|Viande|Filets De Saumon Rose Selection (567 g)|Super C|8,00 $ chacun|
+|🐖|Viande|Jambon Fumé Au Noyer Sugardale|Super C|2,99 $ /lb|
+|🐔|Viande|Jeune Dindon Flamingo|Super C|1,99 $ /lb|
+|🥚|Viande|Oeufs Blancs Selection (Limite de 4)|Super C|2,99 $ chacun|
+|🍌|Fruits|Cantaloup Biologique|Supermarche PA|2,99 $ chacun|
+|🍌|Fruits|Pommes Ginger Gold (3lb)|Supermarche PA|2,99 $ chacun|
+|🐄|Laitier|Beurre My Country Non-Salé Ou Demi-Sel Lactantia (454g)|Supermarche PA|4,99 $ chacun|
+|🥕|Légumes|Aubergines|Supermarche PA|0,99 $ /lb|
+|🥕|Légumes|Chou-Fleur Biologique|Supermarche PA|2,00 $ chacun|
+|🥕|Légumes|Poivrons, Rouges, Orange Ou Jaunes|Supermarche PA|0,99 $ /lb|
+|🍅|Légumes|Tomates Cocktalio Savoura (454g)|Supermarche PA|0,99 $ chacun|
+|🐖|Viande|Filet De Porc Frais|Supermarche PA|3,49 $ /lb​|
