@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Épicerie Interactive en Rabais</title>
+    <style>
+        :root {
+            --image-size: 150px;
+            --bg-color: #f4f7f6; --card-bg-color: #ffffff; --text-color: #333; --text-color-light: #666;
+            --border-color: #e0e0e0; --header-bg-color: #4CAF50; --header-text-color: #ffffff;
+            --row-hover-bg-color: #f1f1f1; --input-bg-color: #fdfdfd; --input-border-color: #ccc;
+        }
+        body.dark-mode {
+            --bg-color: #212529; --card-bg-color: #343a40; --text-color: #f8f9fa; --text-color-light: #adb5bd;
+            --border-color: #495057; --header-bg-color: #2c5f2d; --header-text-color: #ffffff;
+            --row-hover-bg-color: #495057; --input-bg-color: #495057; --input-border-color: #6c757d;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0; background-color: var(--bg-color); color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .container { padding: 20px; }
+        h1 { text-align: center; color: var(--header-bg-color); margin-bottom: 0.5rem; }
+        .subtitle {
+            text-align: center; font-size: 1rem; font-weight: 400;
+            color: var(--text-color-light); margin-top: -10px; margin-bottom: 25px;
+        }
+        .controls-grid {
+            max-width: 1400px; margin: 0 auto 20px auto; padding: 20px; background-color: var(--card-bg-color);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 12px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; align-items: center;
+        }
+        .control-group { display: flex; flex-direction: column; gap: 5px; }
+        .control-group label { font-weight: 500; font-size: 14px; color: var(--text-color-light); }
+        .controls-grid input[type="text"], .controls-grid select {
+            width: 100%; padding: 10px; border-radius: 5px; border: 1px solid var(--input-border-color);
+            background-color: var(--input-bg-color); color: var(--text-color); font-size: 16px;
+        }
+        .store-checkbox-container {
+            grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 10px 20px; margin-top: 10px;
+        }
+        .store-checkbox-container label {
+            display: flex; align-items: center; gap: 8px; font-size: 16px; cursor: pointer; user-select: none;
+        }
+        .theme-switch-wrapper { display: flex; align-items: center; justify-self: end; gap: 10px; }
+        .slider { background-color: #ccc; bottom: 0; cursor: pointer; left: 0; position: absolute; right: 0; top: 0; transition: .4s; border-radius: 24px; }
+        .slider:before { background-color: #fff; bottom: 4px; content: ""; height: 16px; left: 4px; position: absolute; transition: .4s; width: 16px; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--header-bg-color); }
+        input:checked + .slider:before { transform: translateX(26px); }
+        .theme-switch { display: inline-block; height: 24px; position: relative; width: 50px; }
+        .theme-switch input { display:none; }
+        
+        #table-container {
+            margin: auto; max-width: 1400px; background-color: var(--card-bg-color);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 12px; overflow: hidden;
+        }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 16px 20px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+        tr td:first-child, tr th:first-child { padding-left: 24px; }
+        tr td:last-child, tr th:last-child { padding-right: 24px; }
+        thead th {
+            background-color: var(--header-bg-color); color: var(--header-text-color); font-weight: 600;
+            position: sticky; top: 0; z-index: 10; white-space: nowrap;
+        }
+        th[data-sortable] { cursor: pointer; user-select: none; }
+        th[data-sortable]:hover { background-color: #2e7d32; }
+        .sort-indicator { font-size: 0.8em; margin-left: 5px; }
+        tbody tr:last-child td { border-bottom: none; }
+        tbody tr:hover { background-color: var(--row-hover-bg-color); }
+
+        img.item-image {
+            max-width: var(--image-size); max-height: calc(var(--image-size) * 0.8); width: auto; height: auto;
+            object-fit: contain; display: block; border-radius: 8px; cursor: pointer; transition: transform 0.2s;
+        }
+        img.item-image:hover { transform: scale(1.05); }
+        .loading, .error, .no-results { text-align: center; padding: 40px; font-size: 1.2em; color: var(--text-color-light); }
+        
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); justify-content: center; align-items: center; }
+        .modal-content { display: block; max-width: 90%; max-height: 90vh; animation: zoom 0.3s; }
+        @keyframes zoom { from {transform:scale(0)} to {transform:scale(1)} }
+        .close { position: absolute; top: 20px; right: 35px; color: #f1f1f1; font-size: 40px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Épicerie Interactive en Rabais</h1>
+        <h2 class="subtitle">
+            Ma liste d'épicerie personnalisée à partir du 9 octobre<br>
+            par /u/eranumerique, https://eranumerique.github.io/
+        </h2>
+
+        <div class="controls-grid">
+            <div class="control-group"><label for="search-input">Rechercher</label><input type="text" id="search-input" placeholder="🔍 Trouver un article..."></div>
+            <div class="control-group"><label for="type-filter">Type</label><select id="type-filter"><option value="all">Tous les types</option></select></div>
+            <div class="control-group" style="grid-column: span 2;">
+                <label for="imageSizeSlider">Taille de l'image (<span id="imageSizeValue">150px</span>)</label>
+                <input type="range" id="imageSizeSlider" min="50" max="500" value="150">
+            </div>
+            <div class="theme-switch-wrapper">
+                <span>☀️</span>
+                <label class="theme-switch"><input type="checkbox" id="darkModeToggle"><span class="slider"></span></label>
+                <span>🌙</span>
+            </div>
+            <div class="control-group" style="grid-column: 1 / -1;">
+                <label>Filtrer par magasin</label>
+                <div id="store-checkbox-container"></div>
+            </div>
+        </div>
+
+        <div id="table-container"><div class="loading">Chargement des données...</div></div>
+    </div>
+
+    <div id="imageModal" class="modal"><span class="close">&times;</span><img class="modal-content" id="modalImage"></div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const tableContainer = document.getElementById('table-container');
+        const searchInput = document.getElementById('search-input');
+        const typeFilter = document.getElementById('type-filter');
+        const storeCheckboxContainer = document.getElementById('store-checkbox-container');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const imageSizeSlider = document.getElementById('imageSizeSlider');
+        const imageSizeValue = document.getElementById('imageSizeValue');
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+        const closeModal = document.querySelector('.close');
+
+        let allGroceries = [];
+        let currentSort = { column: null, direction: 'asc' };
+        
+        const THEME_KEY = 'groceryTableTheme';
+        const IMAGE_SIZE_KEY = 'groceryTableImageSize';
+        const STORE_SELECTION_KEY = 'groceryStoreSelection';
+
+        function applyTheme(theme) { document.body.classList.toggle('dark-mode', theme === 'dark'); darkModeToggle.checked = (theme === 'dark'); }
+        function applyImageSize(size) {
+            document.documentElement.style.setProperty('--image-size', `${size}px`);
+            imageSizeSlider.value = size; imageSizeValue.textContent = `${size}px`;
+        }
+        function showModal(src) { modal.style.display = "flex"; modalImg.src = src; }
+
+        async function initializeApp() {
+            applyTheme(localStorage.getItem(THEME_KEY) || 'dark');
+            applyImageSize(localStorage.getItem(IMAGE_SIZE_KEY) || '150');
+
+            try {
+                const [mdRes, jsonRes] = await Promise.all([fetch('Liste/Tableau.md'), fetch('groceries.json')]);
+                if (!mdRes.ok || !jsonRes.ok) throw new Error(`Échec du chargement des fichiers de données.`);
+                
+                const tableMdText = await mdRes.text();
+                const imageFiles = await jsonRes.json();
+                
+                allGroceries = parseMarkdownTable(tableMdText).map(item => ({
+                    ...item, image: findImage(item.aliment, item.magasin, imageFiles)
+                }));
+                
+                populateFilters();
+                renderTable();
+            } catch (error) {
+                console.error('Erreur d\'initialisation:', error);
+                tableContainer.innerHTML = `<div class="error">Impossible de charger les données d'épicerie.</div>`;
+            }
+        }
+
+        function populateFilters() {
+            const stores = [...new Set(allGroceries.map(item => item.magasin))].sort();
+            const types = [...new Set(allGroceries.map(item => item.type))].sort();
+            
+            types.forEach(type => typeFilter.add(new Option(type, type)));
+
+            const savedStores = JSON.parse(localStorage.getItem(STORE_SELECTION_KEY));
+            
+            stores.forEach(store => {
+                const label = document.createElement('label');
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.value = store;
+                checkbox.checked = savedStores ? savedStores.includes(store) : true;
+                checkbox.addEventListener('change', () => {
+                    saveStorePreferences();
+                    renderTable();
+                });
+                label.appendChild(checkbox);
+                label.append(store);
+                storeCheckboxContainer.appendChild(label);
+            });
+        }
+        
+        function saveStorePreferences() {
+            const selectedStores = Array.from(storeCheckboxContainer.querySelectorAll('input:checked')).map(cb => cb.value);
+            localStorage.setItem(STORE_SELECTION_KEY, JSON.stringify(selectedStores));
+        }
+
+        function renderTable() {
+            let data = [...allGroceries];
+            const searchTerm = searchInput.value.toLowerCase();
+            const selectedType = typeFilter.value;
+            const selectedStores = Array.from(storeCheckboxContainer.querySelectorAll('input:checked')).map(cb => cb.value);
+
+            if (searchTerm) data = data.filter(i => Object.values(i).some(val => String(val).toLowerCase().includes(searchTerm)));
+            if (selectedType !== 'all') data = data.filter(i => i.type === selectedType);
+            data = data.filter(i => selectedStores.includes(i.magasin));
+            
+            if (currentSort.column) {
+                data.sort((a, b) => {
+                    const valA = a[currentSort.column], valB = b[currentSort.column];
+                    let comp = 0;
+                    if (currentSort.column === 'prix') {
+                        const priceA = parseFloat(valA.replace(/[^0-9.]/g, '')) || 0;
+                        const priceB = parseFloat(valB.replace(/[^0-9.]/g, '')) || 0;
+                        comp = priceA > priceB ? 1 : -1;
+                    } else { comp = valA.localeCompare(valB, 'fr', { sensitivity: 'base' }); }
+                    return currentSort.direction === 'desc' ? comp * -1 : comp;
+                });
+            }
+            buildTableHTML(data);
+        }
+        
+        function buildTableHTML(data) {
+            tableContainer.innerHTML = data.length === 0 ? `<div class="no-results">Aucun article ne correspond à vos filtres.</div>` : '';
+            if (data.length === 0) return;
+
+            const table = document.createElement('table');
+            const thead = document.createElement('thead');
+            const tbody = document.createElement('tbody');
+            
+            const headers = [
+                { key: 'image', text: 'Image', sortable: false }, { key: 'emoji', text: 'Emoji', sortable: false },
+                { key: 'type', text: 'Type', sortable: false }, { key: 'aliment', text: 'Aliment', sortable: true },
+                { key: 'magasin', text: 'Magasin', sortable: true }, { key: 'prix', text: 'Prix/lb ou unité', sortable: true }
+            ];
+            const headerRow = document.createElement('tr');
+            headers.forEach(h => {
+                const th = document.createElement('th');
+                th.textContent = h.text;
+                if (h.sortable) {
+                    th.dataset.sortable = true; th.dataset.column = h.key;
+                    if (currentSort.column === h.key) th.innerHTML += `<span class="sort-indicator">${currentSort.direction === 'asc' ? '▲' : '▼'}</span>`;
+                    th.addEventListener('click', handleSort);
+                }
+                headerRow.appendChild(th);
+            });
+            thead.appendChild(headerRow);
+            
+            data.forEach(row => {
+                const tr = document.createElement('tr');
+                const imagePath = row.image ? `images/weekly-groceries/${row.image}` : null;
+                tr.innerHTML = `
+                    <td>${imagePath ? `<img src="${imagePath}" alt="${row.aliment}" class="item-image">` : 'N/A'}</td>
+                    <td>${row.emoji}</td>
+                    <td>${row.type}</td>
+                    <td>${row.aliment}</td>
+                    <td>${row.magasin}</td>
+                    <td>${row.prix}</td>
+                `;
+                if (imagePath) tr.querySelector('.item-image').onclick = () => showModal(imagePath);
+                tbody.appendChild(tr);
+            });
+            
+            table.append(thead, tbody);
+            tableContainer.appendChild(table);
+        }
+
+        function handleSort(e) {
+            const column = e.currentTarget.dataset.column;
+            if (currentSort.column === column) {
+                currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSort.column = column; currentSort.direction = 'asc';
+            }
+            renderTable();
+        }
+
+        function parseMarkdownTable(md) {
+            return md.trim().split('\n').slice(2).map(line => {
+                const cells = line.split('|').map(c => c.trim()).slice(1, -1);
+                return { emoji: cells[0], type: cells[1], aliment: cells[2], magasin: cells[3], prix: cells[4] };
+            });
+        }
+        function findImage(itemName, storeName, imageList) {
+            const norm = (str) => str.toLowerCase().replace(/\s+/g, '');
+            const normalizedStore = norm(storeName);
+            const normalizedItem = itemName.toLowerCase().replace(/de l'atlantique/g, 'atlantique').replace(/biologique/g, 'bio').replace(/désossées, sans peau|avec os|[()",.]/g, '');
+            const keywords = new Set(normalizedItem.split(' ').filter(w => w.length > 2));
+            const storeImages = imageList.filter(f => norm(f).includes(normalizedStore));
+            let bestMatch = null, highestScore = 0;
+            for (const file of storeImages) {
+                const normFile = file.toLowerCase();
+                let score = 0;
+                for (const keyword of keywords) if (normFile.includes(keyword)) score++;
+                if (score > highestScore) { highestScore = score; bestMatch = file; }
+            }
+            return highestScore > 0 ? bestMatch : null;
+        }
+
+        darkModeToggle.addEventListener('change', () => {
+            const newTheme = darkModeToggle.checked ? 'dark' : 'light';
+            localStorage.setItem(THEME_KEY, newTheme); applyTheme(newTheme);
+        });
+        imageSizeSlider.addEventListener('input', (e) => applyImageSize(e.target.value));
+        imageSizeSlider.addEventListener('change', (e) => localStorage.setItem(IMAGE_SIZE_KEY, e.target.value));
+        [searchInput, typeFilter].forEach(el => el.addEventListener('input', renderTable));
+        closeModal.onclick = () => modal.style.display = "none";
+        modal.onclick = (e) => { if (e.target === modal) modal.style.display = "none"; };
+        document.addEventListener('keydown', (e) => { if (e.key === "Escape") modal.style.display = "none"; });
+
+        initializeApp();
+    });
+    </script>
+</body>
+</html>
