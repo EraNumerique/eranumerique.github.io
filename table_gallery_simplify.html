@@ -101,7 +101,7 @@
                 <div id="type-button-container" class="button-container"></div>
             </div>
             <div class="control-group" style="grid-column: 1 / -1;">
-                <label>Filtrer par marchand</label>
+                <label>Filtrer par magasin</label>
                 <div id="store-checkbox-container" class="checkbox-container"></div>
             </div>
             <div class="control-group" style="grid-column: 1 / -1;">
@@ -137,14 +137,17 @@
             COLUMNS: 'groceryColumnVisibility'
         };
 
-        function applyTheme(theme) { document.body.classList.toggle('dark-mode', theme === 'dark'); ui.darkModeToggle.checked = (theme === 'dark'); }
+        function applyTheme(theme) {
+            document.body.classList.toggle('dark-mode', theme === 'dark');
+            ui.darkModeToggle.checked = (theme === 'dark');
+        }
 
         async function initializeApp() {
             applyTheme(localStorage.getItem(KEYS.THEME) || 'dark');
 
             try {
                 const mdRes = await fetch('Liste/Tableau.md');
-                if (!mdRes.ok) throw new Error(`Échec du chargement du fichier de données.`);
+                if (!mdRes.ok) throw new Error(`Échec du chargement du fichier de données. Vérifiez le chemin du fichier.`);
                 const tableMdText = await mdRes.text();
                 
                 tableHeaders = extractHeadersFromMarkdown(tableMdText);
@@ -154,17 +157,18 @@
                 renderTable();
             } catch (error) {
                 console.error('Erreur d\'initialisation:', error);
-                ui.tableContainer.innerHTML = `<div class="error">Impossible de charger les données d'épicerie.</div>`;
+                ui.tableContainer.innerHTML = `<div class="error">Impossible de charger les données d'épicerie. ${error.message}</div>`;
             }
         }
 
         function populateFilters() {
-            const stores = [...new Set(allGroceries.map(item => item.marchand))].filter(Boolean).sort();
+            const stores = [...new Set(allGroceries.map(item => item.magasin))].filter(Boolean).sort();
             const types = [...new Set(allGroceries.map(item => item.type))].filter(Boolean).sort();
             
             ['Tous les types', ...types].forEach(type => {
                 const button = document.createElement('button');
-                button.className = 'type-button'; button.textContent = type;
+                button.className = 'type-button';
+                button.textContent = type;
                 button.dataset.type = (type === 'Tous les types') ? 'all' : type;
                 if (type === 'Tous les types') button.classList.add('active');
                 button.addEventListener('click', handleTypeFilterClick);
@@ -175,8 +179,8 @@
             stores.forEach(store => {
                 const label = document.createElement('label');
                 const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox'; checkbox.value = store;
-                // CHANGED: Treat null or an empty array as the default (all checked)
+                checkbox.type = 'checkbox';
+                checkbox.value = store;
                 checkbox.checked = (savedStores === null || savedStores.length === 0) ? true : savedStores.includes(store);
                 checkbox.addEventListener('change', () => { savePreferences(KEYS.STORES, getCheckedValues(ui.storeCheckboxContainer)); renderTable(); });
                 label.append(checkbox, store);
@@ -187,9 +191,9 @@
             tableHeaders.forEach(header => {
                 const label = document.createElement('label');
                 const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox'; checkbox.value = header.key;
-                // CHANGED: Applied the same fix here for consistency
-                checkbox.checked = (savedColumns === null || savedColumns.length === 0) ? true : savedColumns.includes(header.key);
+                checkbox.type = 'checkbox';
+                checkbox.value = header.key;
+                checkbox.checked = (savedColumns === null) ? true : savedColumns.includes(header.key);
                 checkbox.addEventListener('change', () => { savePreferences(KEYS.COLUMNS, getCheckedValues(ui.columnToggleContainer)); renderTable(); });
                 label.append(checkbox, header.text);
                 ui.columnToggleContainer.appendChild(label);
@@ -207,9 +211,7 @@
 
             if (searchTerm) data = data.filter(i => Object.values(i).some(val => String(val).toLowerCase().includes(searchTerm)));
             if (selectedType !== 'all') data = data.filter(i => i.type === selectedType);
-            
-            // This is the filter that was causing the issue when selectedStores was empty
-            data = data.filter(i => selectedStores.includes(i.marchand));
+            data = data.filter(i => selectedStores.includes(i.magasin));
 
             const totalCount = allGroceries.length;
             const filteredCount = data.length;
@@ -220,12 +222,12 @@
                 data.sort((a, b) => {
                     const valA = a[currentSort.column] || '', valB = b[currentSort.column] || '';
                     let comp = 0;
-                    const isNumericSort = ['prix', 'kg'].some(kw => currentSort.column.includes(kw));
+                    const isNumericSort = ['prix', 'kg'].some(kw => currentSort.column.toLowerCase().includes(kw));
                     if (isNumericSort) {
-                        const priceA = parseFloat(valA.replace(/[^0-9,]/g, '').replace(',', '.')) || 0;
-                        const priceB = parseFloat(valB.replace(/[^0-9,]/g, '').replace(',', '.')) || 0;
+                        const priceA = parseFloat(String(valA).replace(/[^0-9,]/g, '').replace(',', '.')) || 0;
+                        const priceB = parseFloat(String(valB).replace(/[^0-9,]/g, '').replace(',', '.')) || 0;
                         comp = priceA > priceB ? 1 : -1;
-                    } else { comp = valA.localeCompare(valB, 'fr', { sensitivity: 'base' }); }
+                    } else { comp = String(valA).localeCompare(String(valB), 'fr', { sensitivity: 'base' }); }
                     return currentSort.direction === 'desc' ? comp * -1 : comp;
                 });
             }
@@ -285,10 +287,11 @@
             renderTable();
         }
 
+        // CORRECTED: This version no longer adds a fake "image" header
         function extractHeadersFromMarkdown(md) {
             const headerLine = md.trim().split('\n')[0];
             const headerNames = headerLine.split('|').map(h => h.trim()).filter(Boolean);
-            const createKey = (text) => text.toLowerCase().replace(/[^a-z0-9]/g, '');
+            const createKey = (text) => text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, '');
 
             let headers = [];
             headerNames.forEach(name => {
@@ -298,13 +301,17 @@
             return headers;
         }
 
+        // CORRECTED: This version correctly maps the headers to the data cells
         function parseMarkdownTable(md, headers) {
             const dataRows = md.trim().split('\n').slice(2);
             return dataRows.map(line => {
                 const cells = line.split('|').map(c => c.trim()).slice(1, -1);
                 const rowData = {};
                 headers.forEach((header, index) => {
-                    rowData[header.key] = cells[index] || '';
+                    // This now works because the number of headers matches the number of cells
+                    if (cells[index] !== undefined) {
+                       rowData[header.key] = cells[index];
+                    }
                 });
                 return rowData;
             });
