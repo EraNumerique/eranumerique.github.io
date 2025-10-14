@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Épicerie Interactive en Rabais</title>
+    <title>Épicerie Interactive en Rabais (Version Texte)</title>
     <style>
         :root {
-            --image-size: 150px;
             --bg-color: #f4f7f6; --card-bg-color: #ffffff; --text-color: #333; --text-color-light: #666;
             --border-color: #e0e0e0; --header-bg-color: #4CAF50; --header-text-color: #ffffff;
             --row-hover-bg-color: #f1f1f1; --input-bg-color: #fdfdfd; --input-border-color: #ccc;
@@ -27,7 +26,7 @@
         .controls-grid {
             max-width: 1400px; margin: 0 auto 20px auto; padding: 20px; background-color: var(--card-bg-color);
             box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 12px;
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; align-items: center;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; align-items: center;
         }
         .control-group { display: flex; flex-direction: column; gap: 5px; }
         .control-group label { font-weight: 500; font-size: 14px; color: var(--text-color-light); }
@@ -72,17 +71,8 @@
         .sort-indicator { font-size: 0.8em; margin-left: 5px; }
         tbody tr:last-child td { border-bottom: none; }
         tbody tr:hover { background-color: var(--row-hover-bg-color); }
-        img.item-image {
-            max-width: var(--image-size); max-height: calc(var(--image-size) * 0.8); width: auto; height: auto;
-            object-fit: contain; display: block; border-radius: 8px; cursor: pointer; transition: transform 0.2s;
-        }
         .loading, .error, .no-results { text-align: center; padding: 40px; font-size: 1.2em; color: var(--text-color-light); }
         
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); justify-content: center; align-items: center; }
-        .modal-content { display: block; max-width: 90%; max-height: 90vh; animation: zoom 0.3s; }
-        @keyframes zoom { from {transform:scale(0)} to {transform:scale(1)} }
-        .close { position: absolute; top: 20px; right: 35px; color: #f1f1f1; font-size: 40px; font-weight: bold; cursor: pointer; }
-
         @media (max-width: 768px) {
             .container { padding: 5px; } h1 { font-size: 1.5em; } .subtitle { font-size: 0.9em; }
             .controls-grid { grid-template-columns: 1fr; }
@@ -100,11 +90,7 @@
         </h2>
 
         <div class="controls-grid">
-            <div class="control-group"><label for="search-input">Rechercher</label><input type="text" id="search-input" placeholder="🔍 Trouver un article..."></div>
-            <div class="control-group" style="grid-column: span 2;">
-                <label for="imageSizeSlider">Taille de l'image (<span id="imageSizeValue">150px</span>)</label>
-                <input type="range" id="imageSizeSlider" min="50" max="300" value="150">
-            </div>
+            <div class="control-group" style="grid-column: 1 / -1;"><label for="search-input">Rechercher</label><input type="text" id="search-input" placeholder="🔍 Trouver un article..."></div>
             <div class="theme-switch-wrapper">
                 <span>☀️</span>
                 <label class="theme-switch"><input type="checkbox" id="darkModeToggle"><span class="slider"></span></label>
@@ -115,7 +101,7 @@
                 <div id="type-button-container" class="button-container"></div>
             </div>
             <div class="control-group" style="grid-column: 1 / -1;">
-                <label>Filtrer par magasin</label>
+                <label>Filtrer par marchand</label>
                 <div id="store-checkbox-container" class="checkbox-container"></div>
             </div>
             <div class="control-group" style="grid-column: 1 / -1;">
@@ -124,15 +110,12 @@
             </div>
         </div>
 
-        <!-- NOUVEAU: Conteneur pour le compteur d'articles -->
         <div id="item-count" class="item-count"></div>
 
         <div id="table-container"><div class="loading">Chargement des données...</div></div>
     </div>
 
-    <div id="imageModal" class="modal"><span class="close">&times;</span><img class="modal-content" id="modalImage"></div>
-
-    <script>
+<script>
     document.addEventListener('DOMContentLoaded', () => {
         const ui = {
             tableContainer: document.getElementById('table-container'),
@@ -141,12 +124,7 @@
             storeCheckboxContainer: document.getElementById('store-checkbox-container'),
             columnToggleContainer: document.getElementById('column-toggle-container'),
             darkModeToggle: document.getElementById('darkModeToggle'),
-            imageSizeSlider: document.getElementById('imageSizeSlider'),
-            imageSizeValue: document.getElementById('imageSizeValue'),
-            itemCount: document.getElementById('item-count'), // Nouveau
-            modal: document.getElementById('imageModal'),
-            modalImg: document.getElementById('modalImage'),
-            closeModal: document.querySelector('.close')
+            itemCount: document.getElementById('item-count'),
         };
 
         let allGroceries = [];
@@ -154,31 +132,23 @@
         let currentSort = { column: null, direction: 'asc' };
         
         const KEYS = {
-            THEME: 'groceryTableTheme', IMAGE_SIZE: 'groceryTableImageSize',
-            STORES: 'groceryStoreSelection', COLUMNS: 'groceryColumnVisibility'
+            THEME: 'groceryTableTheme',
+            STORES: 'groceryStoreSelection',
+            COLUMNS: 'groceryColumnVisibility'
         };
 
         function applyTheme(theme) { document.body.classList.toggle('dark-mode', theme === 'dark'); ui.darkModeToggle.checked = (theme === 'dark'); }
-        function applyImageSize(size) {
-            document.documentElement.style.setProperty('--image-size', `${size}px`);
-            ui.imageSizeSlider.value = size; ui.imageSizeValue.textContent = `${size}px`;
-        }
-        function showModal(src) { ui.modal.style.display = "flex"; ui.modalImg.src = src; }
 
         async function initializeApp() {
             applyTheme(localStorage.getItem(KEYS.THEME) || 'dark');
-            applyImageSize(localStorage.getItem(KEYS.IMAGE_SIZE) || '150');
 
             try {
-                const [mdRes, jsonRes] = await Promise.all([fetch('Liste/Tableau.md'), fetch('groceries.json')]);
-                if (!mdRes.ok || !jsonRes.ok) throw new Error(`Échec du chargement des fichiers de données.`);
+                const mdRes = await fetch('Liste/Tableau.md');
+                if (!mdRes.ok) throw new Error(`Échec du chargement du fichier de données.`);
                 const tableMdText = await mdRes.text();
-                const imageFiles = await jsonRes.json();
                 
                 tableHeaders = extractHeadersFromMarkdown(tableMdText);
-                allGroceries = parseMarkdownTable(tableMdText, tableHeaders).map(item => ({
-                    ...item, image: findImage(item.aliment, item.magasin, imageFiles)
-                }));
+                allGroceries = parseMarkdownTable(tableMdText, tableHeaders);
                 
                 populateFilters();
                 renderTable();
@@ -189,7 +159,7 @@
         }
 
         function populateFilters() {
-            const stores = [...new Set(allGroceries.map(item => item.magasin))].filter(Boolean).sort();
+            const stores = [...new Set(allGroceries.map(item => item.marchand))].filter(Boolean).sort();
             const types = [...new Set(allGroceries.map(item => item.type))].filter(Boolean).sort();
             
             ['Tous les types', ...types].forEach(type => {
@@ -206,7 +176,8 @@
                 const label = document.createElement('label');
                 const checkbox = document.createElement('input');
                 checkbox.type = 'checkbox'; checkbox.value = store;
-                checkbox.checked = savedStores ? savedStores.includes(store) : true;
+                // CHANGED: Treat null or an empty array as the default (all checked)
+                checkbox.checked = (savedStores === null || savedStores.length === 0) ? true : savedStores.includes(store);
                 checkbox.addEventListener('change', () => { savePreferences(KEYS.STORES, getCheckedValues(ui.storeCheckboxContainer)); renderTable(); });
                 label.append(checkbox, store);
                 ui.storeCheckboxContainer.appendChild(label);
@@ -217,7 +188,8 @@
                 const label = document.createElement('label');
                 const checkbox = document.createElement('input');
                 checkbox.type = 'checkbox'; checkbox.value = header.key;
-                checkbox.checked = savedColumns ? savedColumns.includes(header.key) : true;
+                // CHANGED: Applied the same fix here for consistency
+                checkbox.checked = (savedColumns === null || savedColumns.length === 0) ? true : savedColumns.includes(header.key);
                 checkbox.addEventListener('change', () => { savePreferences(KEYS.COLUMNS, getCheckedValues(ui.columnToggleContainer)); renderTable(); });
                 label.append(checkbox, header.text);
                 ui.columnToggleContainer.appendChild(label);
@@ -233,18 +205,17 @@
             const selectedType = ui.typeButtonContainer.querySelector('.active').dataset.type;
             const selectedStores = getCheckedValues(ui.storeCheckboxContainer);
 
-            // Filtrage des données
             if (searchTerm) data = data.filter(i => Object.values(i).some(val => String(val).toLowerCase().includes(searchTerm)));
             if (selectedType !== 'all') data = data.filter(i => i.type === selectedType);
-            data = data.filter(i => selectedStores.includes(i.magasin));
+            
+            // This is the filter that was causing the issue when selectedStores was empty
+            data = data.filter(i => selectedStores.includes(i.marchand));
 
-            // NOUVEAU: Mise à jour du compteur
             const totalCount = allGroceries.length;
             const filteredCount = data.length;
             const productString = filteredCount <= 1 ? 'produit' : 'produits';
             ui.itemCount.textContent = `Affichage de ${filteredCount} ${productString} sur ${totalCount} au total.`;
             
-            // Tri des données
             if (currentSort.column) {
                 data.sort((a, b) => {
                     const valA = a[currentSort.column] || '', valB = b[currentSort.column] || '';
@@ -288,17 +259,7 @@
                 const tr = document.createElement('tr');
                 visibleHeaders.forEach(header => {
                     const td = document.createElement('td');
-                    if (header.key === 'image') {
-                        const imagePath = row.image ? `images/weekly-groceries/${row.image}` : null;
-                        if (imagePath) {
-                            const img = document.createElement('img');
-                            img.src = imagePath; img.alt = row.aliment || ''; img.className = 'item-image';
-                            img.onclick = () => showModal(imagePath);
-                            td.appendChild(img);
-                        } else { td.textContent = 'N/A'; }
-                    } else {
-                        td.innerHTML = (row[header.key] || '').replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>');
-                    }
+                    td.innerHTML = (row[header.key] || '').replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>');
                     tr.appendChild(td);
                 });
                 tbody.appendChild(tr);
@@ -327,19 +288,9 @@
         function extractHeadersFromMarkdown(md) {
             const headerLine = md.trim().split('\n')[0];
             const headerNames = headerLine.split('|').map(h => h.trim()).filter(Boolean);
+            const createKey = (text) => text.toLowerCase().replace(/[^a-z0-9]/g, '');
 
-            // This function now maps specific headers to our desired internal keys
-            const createKey = (text) => {
-                const normalized = text.toLowerCase().replace(/[^a-z0-9]/g, '');
-                const keyMap = {
-                    'produit': 'aliment', // <-- THE CRITICAL FIX IS HERE
-                    'prixunitélbetkg': 'prix',
-                    'prixfiltré': 'prixfiltre'
-                };
-                return keyMap[normalized] || normalized; // Use mapped key or the default
-            };
-
-            let headers = [{ key: 'image', text: 'Image', sortable: false }];
+            let headers = [];
             headerNames.forEach(name => {
                 const key = createKey(name);
                 headers.push({ key, text: name, sortable: !['emoji'].includes(key) });
@@ -349,45 +300,24 @@
 
         function parseMarkdownTable(md, headers) {
             const dataRows = md.trim().split('\n').slice(2);
-            const mdHeaders = headers.filter(h => h.key !== 'image');
             return dataRows.map(line => {
                 const cells = line.split('|').map(c => c.trim()).slice(1, -1);
                 const rowData = {};
-                mdHeaders.forEach((header, index) => { rowData[header.key] = cells[index] || ''; });
+                headers.forEach((header, index) => {
+                    rowData[header.key] = cells[index] || '';
+                });
                 return rowData;
             });
         }
-
-        function findImage(itemName, storeName, imageList) {
-            const norm = (str) => str.toLowerCase().replace(/\s+/g, '');
-            const normalizedStore = norm(storeName);
-            const normalizedItem = itemName.toLowerCase().replace(/de l'atlantique/g, 'atlantique').replace(/biologique/g, 'bio').replace(/désossées, sans peau|avec os|[()",.]/g, '');
-            const keywords = new Set(normalizedItem.split(' ').filter(w => w.length > 2));
-            const storeImages = imageList.filter(f => norm(f).includes(normalizedStore));
-            let bestMatch = null, highestScore = 0;
-            for (const file of storeImages) {
-                const normFile = file.toLowerCase();
-                let score = 0;
-                for (const keyword of keywords) if (normFile.includes(keyword)) score++;
-                if (score > highestScore) { highestScore = score; bestMatch = file; }
-            }
-            return highestScore > 0 ? bestMatch : null;
-        }
-          
 
         ui.darkModeToggle.addEventListener('change', () => {
             const newTheme = ui.darkModeToggle.checked ? 'dark' : 'light';
             savePreferences(KEYS.THEME, newTheme); applyTheme(newTheme);
         });
-        ui.imageSizeSlider.addEventListener('input', (e) => applyImageSize(e.target.value));
-        ui.imageSizeSlider.addEventListener('change', (e) => savePreferences(KEYS.IMAGE_SIZE, e.target.value));
         ui.searchInput.addEventListener('input', renderTable);
-        ui.closeModal.onclick = () => ui.modal.style.display = "none";
-        ui.modal.onclick = (e) => { if (e.target === ui.modal) ui.modal.style.display = "none"; };
-        document.addEventListener('keydown', (e) => { if (e.key === "Escape") ui.modal.style.display = "none"; });
 
         initializeApp();
     });
-    </script>
+</script>
 </body>
 </html>
