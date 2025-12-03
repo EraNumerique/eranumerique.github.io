@@ -1,47 +1,56 @@
 |Emoji|Type|Produit|Magasin|Prix unité, lb et kg|Prix Maximum|
 |:--|:--|:--|:--|:--|:--|
 |🍌|Fruits|Citrons|Adonis|10 pour 4,99 $|Max 0,51 $ ch.|
-|🍌|Fruits|Mûres 340 G|Adonis|2,88 $ ch. (3,84 $ /lb, 8,47 $/kg)|Max 5,34 $ /lb|
-|🍌|Fruits|Pommes Royal Gala Ou Rouges Délicieuses|Adonis|0,99 $ ch. (0,99 $ /lb, 2,18 $/kg)|Max 1,10 $ /lb|
-|🍌|Fruits|Oranges Navel Sans Pépins (8 lb)|IGA|4,99 $ ch. (0,63 $ /lb, 1,39 $/kg)|Max 1,01 $ /lb|
-|🐄|Laitier|Beurre Compliments Sans Carte Scène+ 5.99 (454 g), Limite De 4|IGA|3,99 $ ch. (3,99 $ /lb, 8,80 $/kg)|Max 5,00 $ ch. ET Max 5,00 $ /lb|
-|🥕🥫|Légumes|Légumes Géant Vert, Sans Carte Scène+ 1.25, Limite De 24 Par Client (398 mL)|IGA|0,88 $ chacun|Max 1,00 $ ch.|
-|🥕🥫|Légumes|Pâte De Tomates Hunt'S, Sans Carte Scène+ 1.25, Limite De 24 Par Client (156 mL)|IGA|0,88 $ chacun|Max 1,10 $ ch.|
-|🥕🥫|Légumes|Pois Tendres Le Sieur, Sans Carte Scène+ 1.25, Limite De 24 Par Client (398 mL), Limite De 24|IGA|0,88 $ chacun|Max 1,00 $ ch.|
-|🥕|Légumes|Pommes De Terre Russet Compliments (4,54 kg)|IGA|1,97 $ ch. (0,20 $ /lb, 0,44 $/kg)|Max 0,34 $ /lb|
-|🐖|Viande|Côtelettes De Longe De Porc Frais Avec Os|IGA|2,49 $ /lb (5,49 $/kg)|Max 2,51 $ /lb|
-|🐟🥫|Viande|Thon Pâle Aromatisé Clover Leaf, Sans Carte Scène+ 1.25, Limite De 24 Par Client (170 g)|IGA|0,88 $ ch. (2,35 $ /lb, 5,18 $/kg)|Max 1,10 $ ch.|
-|🍌|Fruits|Oranges Navel Sans Pépins (3 lb)|Marché Richelieu|2,88 $ ch. (0,96 $ /lb, 2,12 $/kg)|Max 1,01 $ /lb|
-|🐖|Viande|Filets De Porc Frais|Marché Richelieu|3,88 $ /lb (8,55 $/kg)|Max 4,01 $ /lb|
-|🍌|Fruits|Clémentines, 5 Lb|Maxi|5,99 $ ch. (1,20 $ /lb, 2,65 $/kg)|Max 1,50 $ /lb|
-|🍌|Fruits|Mûres, 170 G|Maxi|1,77 $ ch. (4,72 $ /lb, 10,41 $/kg)|Max 5,34 $ /lb|
-|🐄|Laitier|Fromage En Emballage Double Saputo, 252-600 G|Maxi|6,50 $ ch. (4,91 $ /lb, 10,82 $/kg)|Max 5,00 $ /lb|
-|🍅|Légumes|Tomates Sur Vigne|Maxi|0,99 $ /lb (2,18 $/kg)|Max 1,10 $ /lb|
-|🥩|Viande|Boeuf Haché Maigre, 908 G, Limite De 4, 13$ Après Limite|Maxi|10,00 $ ch. (5,00 $ /lb, 11,02 $/kg)|Max 5,01 $ /lb|
-|🐟|Viande|Filet De Truite Steelhead, Surgelé|Maxi|9,88 $ /lb (21,78 $/kg)|Max 10,00 $ /lb|
-|🐖|Viande|Jambon Style Toupie (700g)|Maxi|7,88 $ ch. (5,11 $ /lb, 11,27 $/kg)|Max 5,20 $ /lb|
-|🐔|Viande|Poulet Entier|Maxi|1,99 $ /lb (4,39 $/kg)|Max 2,01 $ /lb|
-|🍌|Fruits|Bleuets Ou Mures Du Mexique|Metro|2,98 $ ch. (3,98 $ /lb, 8,77 $/kg)|Max 3,00 $ ch. ET Max 5,32 $ /lb|
-|🥕|Légumes|Petites Pommes De Terre Russet, Rouges Ou À Chair Jaune (3 lb)|Metro|0,99 $ ch. (0,33 $ /lb, 0,73 $/kg)|Max 0,34 $ /lb|
-|🥩|Viande|Boeuf Haché Maigre|Metro|4,99 $ /lb (11,00 $/kg)|Max 5,01 $ /lb|
-|🐖|Viande|Filets De Porc Frais|Metro|3,99 $ /lb (8,80 $/kg)|Max 4,01 $ /lb|
-|🐟|Viande|Filets De Saumon Atlantique Frais|Metro|8,99 $ /lb (19,82 $/kg)|Max 9,01 $ /lb|
-|🍌|Fruits|Blackberries, 170 G|Provigo|2,00 $ ch. (5,34 $ /lb, 11,77 $/kg)|Max 5,34 $ /lb|
-|🥕|Légumes|Pommes De Terre Russet, Sac De 10 Lb (sac de 10)|Provigo|2,00 $ ch. (0,20 $ /lb, 0,44 $/kg)|Max 0,34 $ /lb|
-|🐖|Viande|Côtelettes De Longe De Porc, Combinaison De Coupes, Portions Centre Et Bout De Côtes Avec Os|Provigo|2,50 $ ch. (2,50 $ /lb, 5,51 $/kg)|Max 2,51 $ /lb|
-|🐔|Viande|Poitrines De Poulet Désossés|Provigo|5,44 $ ch. (5,44 $ /lb, 11,99 $/kg)|Max 5,46 $ /lb|
-|🍌|Fruits|Ananas Tropical Gold (gr 8)|Super C|1,99 $ chacun|Max 3,01 $ ch.|
-|🍌|Fruits|Clementines (3 lb)|Super C|3,33 $ ch. (1,11 $ /lb, 2,45 $/kg)|Max 1,50 $ /lb|
-|🥕|Légumes|Carottes Ou Oignons Jaunes (10 lb)|Super C|3,99 $ ch. (0,40 $ /lb, 0,88 $/kg)|Max 0,51 $ /lb|
-|🥕|Légumes|Huile D'Olive Extra Vierge Gallo|Super C|7,77 $ chacun|Max 9,00 $ ch.|
-|🐖|Viande|Jambon Fumé Au Noyer Sugardale|Super C|2,99 $ /lb (6,59 $/kg)|Max 3,50 $ /lb|
-|🐟🥫|Viande|Saumon Rose Clover Leaf|Super C|4,99 $ ch. (5,41 $ /lb, 11,93 $/kg)|Max 5,00 $ ch. ET Max 5,42 $ /lb|
-|🍌|Fruits|Oranges (3lb)|Supermarche PA|2,99 $ ch. (1,00 $ /lb, 2,20 $/kg)|Max 1,01 $ /lb|
-|🥕|Légumes|Avocats (sac de 5)|Supermarche PA|2,99 $ chacun|Max 3,01 $ ch.|
-|🥕|Légumes|Carottes (2lb)|Supermarche PA|0,69 $ ch. (0,35 $ /lb, 0,77 $/kg)|Max 0,51 $ /lb|
-|🥕|Légumes|Couronnes De Brocoli|Supermarche PA|1,49 $ /lb (3,28 $/kg)|Max 1,50 $ ch.|
-|🥕|Légumes|Huile D'Olive Extra Vierge Hermes (1l)|Supermarche PA|6,99 $ chacun|Max 9,00 $ ch.|
-|🥕|Légumes|Sac D'Avocats Jeudi Et Vendredi Seulement (sac de 5)|Supermarche PA|1,99 $ chacun|Max 3,01 $ ch.|
-|🐖|Viande|Côtelettes De Longe De Porc Frais Désossées|Supermarche PA|2,99 $ /lb (6,59 $/kg)|Max 3,00 $ /lb|
-|🐖|Viande|Filet De Porc Frais|Supermarche PA|2,99 $ /lb (6,59 $/kg)|Max 4,01 $ /lb|
-|🐟|Viande|Filets De Pangasius Dégelés|Supermarche PA|3,49 $ /lb (7,69 $/kg)|Max 4,55 $ /lb​|
+|🥕|Légumes|Courges Dures|Adonis|0,99 $ chacun|Max 1,00 $ ch.|
+|🐔|Viande|Dindon Surgelé Cat. "A" Flamingo (7 kg)|Adonis|1,77 $ /lb (3,90 $/kg)|Max 2,00 $ /lb|
+|🐖|Viande|Filet De Porc Nature Ou Mariné|Adonis|3,99 $ /lb (8,80 $/kg)|Max 4,01 $ /lb|
+|🍌|Fruits|Mangue|Tigre Géant|0,97 $ chacun|Max 1,00 $ ch.|
+|🥫|Garde-Manger|Ketchup French'S (1 L)|Tigre Géant|3,57 $ chacun|Max 4,00 $ ch.|
+|🐟🥫|Viande|Thon En Conserve Clover Leaf (170 g), Limite De 6|Tigre Géant|1,00 $ ch.|Max 1,10 $ ch.|
+|🍌|Fruits|Clémentines (1,8 kg)|IGA|4,77 $ ch. (1,20 $ /lb, 2,65 $/kg)|Max 1,50 $ /lb|
+|🍌|Fruits|Pommes Cortland, 6,99$ Sans Scène+ (3,7 kg)|IGA|4,99 $ ch. (0,61 $ /lb, 1,34 $/kg)|Max 1,10 $ /lb|
+|🥫|Garde-Manger|Mayonnaise Mag (890 mL)|IGA|4,99 $ chacun|Max 5,00 $ ch.|
+|🥕|Légumes|Carottes Ou Oignons Jaunes (2,27 kg)|IGA|2 sac pour 4,00 $|Max 0,51 $ /lb|
+|🐟|Viande|Filets De Saumon Coho Frais|IGA|8,99 $ /lb (19,82 $/kg)|Max 9,01 $ /lb|
+|🐖|Viande|Porc Haché Maigre, Surgelé|IGA|2,49 $ /lb (5,49 $/kg)|Max 2,50 $ /lb|
+|🥩|Viande|Veau Haché Maigre, Surgelé|IGA|4,88 $ /lb (10,76 $/kg)|Max 5,00 $ /lb|
+|🍌|Fruits|Framboises Ou Mûres|Marché Richelieu|1,99 $ ch. (5,31 $ /lb, 11,71 $/kg)|Max 5,34 $ /lb|
+|🍌|Fruits|Gros Ananas Tropical Gold (gr 6)|Marché Richelieu|2,99 $ chacun|Max 3,01 $ ch.|
+|🍌|Fruits|Mangue Rouge Ou Mangue Miel (Ataulfo) (gr 12-20)|Marché Richelieu|0,99 $ chacun|Max 1,00 $ ch.|
+|🐄|Laitier|Fromage Selection, Mieux‑Être|Marché Richelieu|4,44 $ ch. (5,03 $ /lb, 11,09 $/kg)|Max 5,04 $ /lb|
+|🥕|Légumes|Couronne De Brocoli États-Unis|Marché Richelieu|1,49 $ chacun|Max 1,50 $ ch.|
+|🐟|Viande|Filet De Saumon Coho, Surgelé|Marché Richelieu|8,99 $ /lb (19,82 $/kg)|Max 9,01 $ /lb|
+|🐔|Viande|Jeune Dindon Assaisonné Flamingo, Surgelé|Marché Richelieu|1,99 $ /lb (4,39 $/kg)|Max 2,00 $ /lb|
+|🍌|Fruits|Clémentines, 5 Lb|Maxi|6,99 $ ch. (1,40 $ /lb, 3,09 $/kg)|Max 1,50 $ /lb|
+|🍌|Fruits|Pommes Empire Délices Du Marché, Sac De 4 Lb|Maxi|2,88 $ ch. (0,72 $ /lb, 1,59 $/kg)|Max 1,10 $ /lb|
+|🐄|Laitier|Barres De Fromage Mozzarellissima Saputo 500 G Ou 400 G Ou Fromage Râpé 320 G Pcm, Limite De 6, 6$ Après Limite|Maxi|4,88 $ ch. (4,43 $ /lb, 9,77 $/kg)|Max 5,00 $ /lb|
+|🥕|Légumes|Avocats Délices Du Marché, 5 Un, Limite De 4, 4$ Après Limite|Maxi|2,88 $ chacun|Max 3,01 $ ch.|
+|🥕|Légumes|Pommes De Terre Russet Délices Du Marché, Sac De 10 Lb, Limite De 4, 4$ Après Limite|Maxi|1,77 $ ch. (0,18 $ /lb, 0,40 $/kg)|Max 0,34 $ /lb|
+|🍅🥫|Légumes|Tomates 796 Ml Ou Légumineuses 540 Ml Unico, Limite De 8, 2$ Après Limite|Maxi|1,22 $ chacun|Max 1,50 $ ch.|
+|🐟|Viande|Filet De Truite Steelhead, Surgelé|Maxi|10,00 $ /lb (22,05 $/kg)|Max 10,00 $ /lb|
+|🐖|Viande|Jambon Style Toupie Royal|Maxi|14,99 $ ch. (4,86 $ /lb, 10,71 $/kg)|Max 5,20 $ /lb|
+|🐖|Viande|Jambonneau Cook'S|Maxi|2,00 $ /lb (4,41 $/kg)|Max 2,25 $ /lb|
+|🐔|Viande|Poitrines De Poulet Désossées, Sans Peau|Maxi|4,99 $ /lb (11,00 $/kg)|Max 5,46 $ /lb|
+|🐟|Viande|Tilapia, 1,36 Kg, Surgelé|Maxi|8,88 $ ch. (2,96 $ /lb, 6,53 $/kg)|Max 4,55 $ /lb|
+|🍌|Fruits|Grosse Mangue Rouge (gr 10)|Metro|0,99 $ chacun|Max 1,00 $ ch.|
+|🍌|Fruits|Pommes Rosinette (3 lb)|Metro|0,99 $ /lb (2,18 $/kg)|Max 1,10 $ /lb|
+|🐄|Laitier|Beurre Selection|Metro|4,88 $ ch. (4,88 $ /lb, 10,76 $/kg)|Max 5,00 $ ch. ET Max 5,00 $ /lb|
+|🐄|Laitier|Yogourt Grec Irrésistible, Barres Croquantes en Bonus|Metro|5,49 $ chacun|Max 5,98 $ ch.|
+|🥕|Légumes|Légumes Selection, Irrésistible, Surgelé|Metro|2,44 $ ch. (1,48 $ /lb, 3,26 $/kg)|Max 2,50 $ ch.|
+|🐟|Viande|Filet De Saumon Coho, Surgelé|Metro|8,88 $ /lb (19,58 $/kg)|Max 9,01 $ /lb|
+|🐖|Viande|Jambon Fumé Levesque|Metro|3,49 $ /lb (7,69 $/kg)|Max 3,50 $ /lb|
+|🐔|Viande|Jeune Dindon Butterball Ou Irrésistible (9 kg), Surgelé|Metro|1,99 $ /lb (4,39 $/kg)|Max 2,00 $ /lb|
+|🐖|Viande|Porc Haché Extra-Maigre|Metro|2,99 $ /lb (6,59 $/kg)|Max 3,00 $ /lb|
+|🍌|Fruits|Clementines (5 lb)|Provigo|5,00 $ ch. (1,00 $ /lb, 2,20 $/kg)|Max 1,50 $ /lb|
+|🍌|Fruits|Ananas Tropical Gold (gr 8)|Super C|2,99 $ chacun|Max 3,01 $ ch.|
+|🍌|Fruits|Mûres|Super C|1,37 $ ch. (3,66 $ /lb, 8,07 $/kg)|Max 5,34 $ /lb|
+|🍌|Fruits|Pommes Mcintosh Ou Cortland (4 lb)|Super C|2,88 $ ch. (0,41 $ /lb, 0,90 $/kg)|Max 1,10 $ /lb|
+|🐄|Laitier|Fromage Râpé Saputo|Super C|10,77 $ ch. (4,89 $ /lb, 10,78 $/kg)|Max 5,00 $ /lb|
+|🥕🥫|Légumes|Légumes Géant Vert, Le Sieur|Super C|0,99 $ chacun|Max 1,00 $ ch.|
+|🐖|Viande|Épaule Picnic De Porc Frais|Super C|1,96 $ /lb (4,32 $/kg)|Max 3,00 $ /lb|
+|🐔|Viande|Poulets Entiers Frais (4,4 lb)|Super C|1,94 $ /lb (4,28 $/kg)|Max 2,01 $ /lb|
+|🍌|Fruits|Bleuets|Supermarche PA|3 pour 5,00 $|Max 3,00 $ ch. ET Max 5,32 $ /lb|
+|🥫|Garde-Manger|Ketchup Primo (1L)|Supermarche PA|1,99 $ chacun|Max 2,00 $ ch.|
+|🥕|Légumes|Aubergines|Supermarche PA|0,79 $ /lb (1,74 $/kg)|Max 1,51 $ ch.|
+|🥕|Légumes|Courgettes Vertes|Supermarche PA|0,79 $ /lb (1,74 $/kg)|Max 1,10 $ ch.|
+|🍅|Légumes|Tomates De Serre|Supermarche PA|0,99 $ /lb (2,18 $/kg)|Max 1,10 $ /lb​|
